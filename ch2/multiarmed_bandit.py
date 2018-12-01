@@ -1,5 +1,6 @@
 import tensorflow as tf 
 import numpy as np 
+import matplotlib.pyplot as plt
 
 # Set bandit. (Environment) 
 bandit_values = [0.2, 0, -0.2, -2]
@@ -28,12 +29,13 @@ loss = -(tf.log(res_output) * reward_holder)
 optimizer = tf.train.GradientDescentOptimizer(learning_rate=1e-4) 
 update = optimizer.minimize(loss)
 
-total_episodes = 1000
+total_episodes = 10000
 
 total_reward = np.zeros(num_arms)
 
 init = tf.global_variables_initializer() 
 
+outputs = []
 with tf.Session() as sess: 
     sess.run(init)  
     i = 0
@@ -43,16 +45,22 @@ with tf.Session() as sess:
         a = np.random.choice(actions, p = actions) # Let 0.26
         action = np.argmax(actions == a) # the index of 0.26 == 2
         ww1 = sess.run(weights) 
-
+        if i % 2 == 0:
+            outputs.append(actions)
         reward = pullBandit(bandit_values[action])
 
         ud, resp, ww, l = sess.run([update, res_output, weights, loss], \
             feed_dict = {reward_holder:[reward], action_holder:[action]}) 
         total_reward[action] += reward 
 
-        if i % 50 == 0:
+        if i % 500 == 0:
             print('When iteration: ' + str(i))
+            print(" * Output of network: " + str(actions))
             print(" * Loss: " + str(l))
             print(" * Delta of weights: " + str(ww - ww1))
             print(" * Reward: " + str(total_reward))
         i += 1  
+
+# Policy: probability of actions
+plt.bar(np.arange(outputs[-1].__len__()), outputs[-1])
+plt.show()
