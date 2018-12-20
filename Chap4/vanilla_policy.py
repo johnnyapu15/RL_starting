@@ -92,6 +92,7 @@ with tf.Session() as sess:
     while i < total_ep: 
         # How descript the state 's'
         s = env.reset() 
+        env.render()
         running_reward = 0
         ep_history = []
         for j in range(max_ep):

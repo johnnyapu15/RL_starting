@@ -39,6 +39,7 @@ with tf.Session() as sess:
     sess.run(init) 
     for i in range(num_eps):
         s = env.reset() 
+        env.render()
         rAll = 0
         d = False 
         j = 0
