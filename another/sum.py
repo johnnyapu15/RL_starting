@@ -66,6 +66,7 @@ class agent():
             d = 1
         else:
             d = 0
+        print(self.w0)
         return o, [d]
     
     def train(self, session, r, a, s_in):
@@ -98,7 +99,7 @@ for t in range(20):
             _, action = myAgent.predict(sess, s)
 
             reward = pye.breath(action)
-            print(reward, action, s)
+            
             loss = myAgent.train(sess, reward, action, s) 
-
-            print(loss)
+            for i in range(s[0]):
+                print(")))")
